@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Admin\Controllers\ManajemenPenjualanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/admin/sales-chart', [ManajemenPenjualanController::class, 'chartData']);
 Route::get('/', function () {
     return view('welcome');
 });

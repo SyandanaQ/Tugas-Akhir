@@ -31,6 +31,9 @@ class ManajemenPenjualanController extends AdminController
         $grid->column('jenis_barang', __('Jenis barang'));
         $grid->column('jumlah_barang', __('Jumlah barang'));
         $grid->column('harga_barang', __('Harga barang'));
+        $grid->column('total', __('Total'))->display(function () {
+            return $this->jumlah_barang * $this->harga_barang;
+        });
         $grid->column('penerima_barang', __('Penerima barang'));
         $grid->column('tanggal', __('Tanggal'));
         $grid->column('created_at', __('Created at'));
@@ -54,6 +57,9 @@ class ManajemenPenjualanController extends AdminController
         $show->field('jenis_barang', __('Jenis barang'));
         $show->field('jumlah_barang', __('Jumlah barang'));
         $show->field('harga_barang', __('Harga barang'));
+        $show->field('total', __('Total'))->as(function () {
+            return $this->jumlah_barang * $this->harga_barang;
+        });
         $show->field('penerima_barang', __('Penerima barang'));
         $show->field('tanggal', __('Tanggal'));
         $show->field('created_at', __('Created at'));
@@ -79,5 +85,26 @@ class ManajemenPenjualanController extends AdminController
         $form->date('tanggal', __('Tanggal'))->default(date('Y-m-d'));
 
         return $form;
+    }
+
+    public function chartData()
+    {
+        // Ambil data penjualan dari database (tanggal dan total)
+        $salesData = ManajemenPenjualan::select('tanggal', 'total')
+            ->orderBy('tanggal')
+            ->get();
+
+        // Ambil label (tanggal) dan data (total) untuk grafik
+        $labels = $salesData->pluck('tanggal')->toArray();
+        $data = $salesData->pluck('total')->toArray();
+
+        // Debugging untuk memeriksa data yang dikirim
+    // dd($labels, $data);
+
+         // Mengirimkan data ke view
+         return view('admin.charts.bar', [
+            'labels' => $labels,
+            'data' => $data
+        ]);
     }
 }
