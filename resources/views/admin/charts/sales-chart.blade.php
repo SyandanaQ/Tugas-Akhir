@@ -1,4 +1,4 @@
-<!-- resources/views/admin/charts/bar.blade.php -->
+<!-- resources/views/admin/charts/sales-chart.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>

@@ -7,6 +7,7 @@ use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show; 
 use \App\Models\ManajemenPenjualan;
+use Carbon\Carbon;
 
 class ManajemenPenjualanController extends AdminController
 {
@@ -95,16 +96,16 @@ class ManajemenPenjualanController extends AdminController
             ->get();
 
         // Ambil label (tanggal) dan data (total) untuk grafik
-        $labels = $salesData->pluck('tanggal')->toArray();
+        $labels = $salesData->pluck('tanggal')->map(function($date) {
+            return Carbon::parse($date)->format('F'); // Mengubah format menjadi nama bulan
+        })->toArray();
+
         $data = $salesData->pluck('total')->toArray();
 
         // Debugging untuk memeriksa data yang dikirim
-    // dd($labels, $data);
+        dd(compact('labels', 'data'));
 
-         // Mengirimkan data ke view
-         return view('admin.charts.bar', [
-            'labels' => $labels,
-            'data' => $data
-        ]);
+        // Mengirimkan data ke view
+        return view('admin.charts.sales-chart', compact('labels', 'data'));
     }
 }

@@ -17,5 +17,5 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
-
+// Admin::js('/packages/prettydocs/js/main.js');
 OpenAdmin\Admin\Form::forget(['editor']);
