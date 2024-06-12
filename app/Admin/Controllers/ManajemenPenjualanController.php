@@ -88,24 +88,30 @@ class ManajemenPenjualanController extends AdminController
         return $form;
     }
 
-    public function chartData()
-    {
-        // Ambil data penjualan dari database (tanggal dan total)
-        $salesData = ManajemenPenjualan::select('tanggal', 'total')
-            ->orderBy('tanggal')
-            ->get();
+   
 
-        // Ambil label (tanggal) dan data (total) untuk grafik
-        $labels = $salesData->pluck('tanggal')->map(function($date) {
-            return Carbon::parse($date)->format('F'); // Mengubah format menjadi nama bulan
-        })->toArray();
+public function chartData()
+{
+    // Ambil data penjualan dari database (tanggal dan total)
+    $salesData = ManajemenPenjualan::select('tanggal', 'total')
+        ->orderBy('tanggal')
+        ->get();
 
-        $data = $salesData->pluck('total')->toArray();
+    // Ambil label (tanggal) dan data (total) untuk grafik
+    $monthlyData = $salesData->groupBy(function($date) {
+        return Carbon::parse($date->tanggal)->format('F'); // Mengelompokkan berdasarkan nama bulan
+    });
 
-        // Debugging untuk memeriksa data yang dikirim
-        dd(compact('labels', 'data'));
+    $labels = [];
+    $data = [];
 
-        // Mengirimkan data ke view
-        return view('admin.charts.sales-chart', compact('labels', 'data'));
+    foreach ($monthlyData as $month => $values) {
+        $labels[] = $month;
+        $data[] = $values->sum('total'); // Menjumlahkan nilai total untuk setiap bulan
     }
+
+    // Mengirimkan data ke view
+    return view('admin.charts.sales-chart', compact('labels', 'data'));
+}
+
 }

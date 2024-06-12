@@ -21,11 +21,17 @@ class HomeController extends Controller
             ->get();
 
         // Ambil label (tanggal) dan data (total) untuk grafik
-        $labels = $salesData->pluck('tanggal')->map(function($date) {
-            return Carbon::parse($date)->format('F'); // Mengubah format menjadi nama bulan
-        })->toArray();
+        $monthlyData = $salesData->groupBy(function($date) {
+            return Carbon::parse($date->tanggal)->format('F'); // Mengelompokkan berdasarkan nama bulan
+        });
 
-        $data = $salesData->pluck('total')->toArray();
+        $labels = [];
+        $data = [];
+
+        foreach ($monthlyData as $month => $values) {
+            $labels[] = $month;
+            $data[] = $values->sum('total'); // Menjumlahkan nilai total untuk setiap bulan
+        }
 
         return $content
             ->css_file(Admin::asset("open-admin/css/pages/dashboard.css"))
