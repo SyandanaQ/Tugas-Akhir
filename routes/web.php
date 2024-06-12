@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Admin\Controllers\ManajemenPenjualanController;
+use App\Admin\Controllers\ARIMAController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +13,7 @@ use App\Admin\Controllers\ManajemenPenjualanController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/admin/sales-forecast', [ARIMAController::class, 'forecast']);
 Route::get('/admin/sales-chart', [ManajemenPenjualanController::class, 'chartData']);
 Route::get('/', function () {
     return view('welcome');
