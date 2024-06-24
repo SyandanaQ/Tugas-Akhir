@@ -18,30 +18,23 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var labels = {!! json_encode($labels) !!};
-    var data = {!! json_encode($data) !!};
+    var data = {!! json_encode($data) !!}.map(Number); // Konversi data menjadi numerik
 
-    // Data untuk prediksi
-    var predictionIndex = labels.length - 1;
-    var predictionData = data[predictionIndex];
+    // Debugging untuk memeriksa data
+    console.log('Labels:', labels);
+    console.log('Data:', data);
 
     var ctx = document.getElementById('salesChart').getContext('2d');
     var salesChart = new Chart(ctx, {
-        type: 'line', // Ganti dengan 'bar' jika ingin grafik batang
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Penjualan',
-                data: data.slice(0, predictionIndex),
+                data: data, // Menggunakan seluruh data
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 fill: false
-            }, {
-                label: 'Prediksi',
-                data: Array(data.length - 1).fill(null).concat([predictionData]),
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                fill: false,
-                borderDash: [10, 5]
             }]
         },
         options: {

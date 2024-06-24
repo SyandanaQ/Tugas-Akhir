@@ -18,5 +18,6 @@ Route::group([
     $router->resource('manajemen-penjualans', ManajemenPenjualanController::class);
 
     $router->resource('manajemen-persediaans', ManajemenPersediaanControllers::class);
+    $router->resource('coba', CobaController::class);
 
 });
